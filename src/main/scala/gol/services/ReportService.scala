@@ -2,13 +2,17 @@ package gol.services
 
 import scalaz.Writer
 
-trait ReportService[Cell] {
-  type PrintOutput = Writer[List[String], List[Cell]]
+trait ReportService[Grid, Cell] {
+  type GridReport  = Writer[List[String], Grid]
 
-  def get(cells: PrintOutput, currentRow: Int): PrintOutput
+  type RowReport = Writer[List[String], List[Cell]]
 
-  def get(cells: List[Cell]): String
+  type CellReport = Writer[List[String], Cell]
 
-  def get(cell: Cell): String
+  def generateCellReport(cell: Cell): CellReport
+
+  def generateRowReport(cells: List[Cell]): RowReport
+
+  def generateGridReport(grid: Grid): GridReport
 
 }

@@ -18,9 +18,8 @@ class GameTest extends FlatSpec {
     for {
       i <- 1 to 10
     } yield {
-      val output = ReportService.get(g.cells.set(Nil), 0)
-      output.run._1.foreach(s => println(s))
-
+      val output = ReportService.generateGridReport(g)
+      output.run._1.foreach(println)
       println("********* Next Generation ************")
       g = GameOfLife.next(g).get
     }

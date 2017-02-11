@@ -1,30 +1,32 @@
 package gol.services.interpreter
 
-import gol.model.{Alive, Cell, Dead}
+import gol.model.{Alive, Cell, Dead, Grid}
 import gol.services._
 
 import scalaz._
 import Scalaz._
 
-class ReportServiceInterpreter extends ReportService[Cell] {
-  override def get(cells: PrintOutput, currentRow: Int): PrintOutput = {
-    if (cells.run._2.isEmpty) cells
-    else {
-      val row = cells.run._2.filter(cell => cell.coord.y == currentRow)
-      val remainingRows = cells.map(cells => cells.filter(cell => !row.contains(cell)))
+class ReportServiceInterpreter extends ReportService[Grid, Cell] {
 
-      get(remainingRows :++> List(get(row)), currentRow + 1)
-    }
-  }
+  override def generateCellReport(cell: Cell): CellReport = cell set List(get(cell))
 
-  override def get(cells: List[Cell]): String = cells.sortBy(_.coord.x).map(get) mkString " "
-
-  override def get(cell: Cell): String = cell match {
+  private def get(cell: Cell): String = cell match {
     case Cell(_, Alive) => "[*]"
     case Cell(_, Dead) => "[ ]"
   }
 
-  def get2(cell: Cell): Writer[String, Cell] = cell.set(get(cell))
+  override def generateRowReport(cells: List[Cell]): RowReport = cells.sortBy(_.coord.x)
+    .foldLeft(cells set List[String]())((output, cell) => output :++> generateCellReport(cell).run._1)
+    .swap.map(ls => List(ls mkString ""))
+    .swap
+
+  override def generateGridReport(grid: Grid): GridReport = {
+    val rows = grid.cells.groupBy(_.coord.y)
+    val rowReports = for (i <- rows.keys.toList.sorted) yield generateRowReport(rows(i))
+
+    rowReports.foldLeft(grid set List[String]())((output, rowReport) => output :++> rowReport.run._1)
+  }
+
 }
 
 object ReportService extends ReportServiceInterpreter

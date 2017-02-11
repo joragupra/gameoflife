@@ -1,4 +1,5 @@
-import domain.Grid
+import gol.model.Grid
+import gol.services.interpreter.GenerationService
 
 object GameOfLife {
 

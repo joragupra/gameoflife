@@ -1,5 +1,9 @@
-import domain._
+import gol.model._
+import gol.services.interpreter.ReportService
 import org.scalatest.FlatSpec
+
+import scalaz._
+import Scalaz._
 
 class GameTest extends FlatSpec {
 
@@ -14,7 +18,9 @@ class GameTest extends FlatSpec {
     for {
       i <- 1 to 10
     } yield {
-      PrintService.printGrid(g)
+      val output = ReportService.get(g.cells.set(Nil), 0)
+      output.run._1.foreach(s => println(s))
+
       println("********* Next Generation ************")
       g = GameOfLife.next(g).get
     }

@@ -1,4 +1,5 @@
-import domain._
+import gol.model._
+import gol.services.interpreter.GenerationService
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 

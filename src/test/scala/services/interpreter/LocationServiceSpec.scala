@@ -1,4 +1,7 @@
-import domain.{Coordinates, Grid}
+package services.interpreter
+
+import gol.model._
+import gol.services.interpreter.LocationService
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 

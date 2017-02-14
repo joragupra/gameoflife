@@ -14,5 +14,4 @@ trait ReportService[Grid, Cell] {
   def generateRowReport(cells: List[Cell]): RowReport
 
   def generateGridReport(grid: Grid): GridReport
-
 }

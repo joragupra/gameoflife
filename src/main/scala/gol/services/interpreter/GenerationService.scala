@@ -47,15 +47,6 @@ class GenerationServiceInterpreter extends GenerationService[Grid, Cell, Coordin
     })
   }
 
-  override def kill(coord: Coordinates)(implicit g: Grid): Grid = changeCellState(coord, Dead)
-
-  override def resurrect(coord: Coordinates)(implicit g: Grid): Grid = changeCellState(coord, Alive)
-
-  private def changeCellState(coord: Coordinates, s: State)(implicit g: Grid): Grid = {
-    val otherCells = g.cells.filter(_.coord != coord)
-    Grid(Cell(coord, s)::otherCells)
-  }
-
 }
 
 object GenerationService extends GenerationServiceInterpreter

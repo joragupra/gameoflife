@@ -35,7 +35,7 @@ class LocationServiceSpec extends FlatSpec {
     LocationService.areNeighbours(c1, c2) should be(false)
   }
 
-  val grid = Grid.withSize(0, 2)
+  val grid = Grid.withSize(2, 2)
 
   "A coordinate" should "have eight neighbours if it is an inner coordinate" in {
     val inner = Coordinates(1, 1)
@@ -53,6 +53,14 @@ class LocationServiceSpec extends FlatSpec {
     val inCorder = Coordinates(0, 0)
 
     LocationService.neighbours(inCorder).run(grid).size should be(3)
+  }
+
+  "A cell" should "be found if it exists in a coordinate" in {
+    LocationService.find(Coordinates(1, 1)).run(grid).isDefined should be(true)
+  }
+
+  it should "return non if no cell exists in a coordinate" in {
+    LocationService.find(Coordinates(20, 30)).run(grid) should be(None)
   }
 
 }

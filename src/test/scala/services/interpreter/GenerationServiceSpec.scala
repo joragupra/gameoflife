@@ -9,11 +9,11 @@ class GenerationServiceSpec extends FlatSpec {
 
   "A living cell" should "die if it has less than two living neighbours" in {
     val testCell = Cell(Coordinates(2, 2), Alive)
-    val testGrid = Grid(List(testCell))//GenerationService.resurrect(testCell.coord)(originalGrid)
+    val testGrid = Grid(List(testCell))
 
     val nextGenerationCell = GenerationService.underpopulation(testCell)
 
-    nextGenerationCell.run(testGrid).get.s should be(Dead)
+    nextGenerationCell.run(testGrid).get should be(CellDied(testCell.coord))
   }
 
   it should "live if it has two or three neighbours" in {
@@ -22,7 +22,7 @@ class GenerationServiceSpec extends FlatSpec {
 
     val nextGenerationCell = GenerationService.survival(testCell)
 
-    nextGenerationCell.run(testGrid).get.s should be(Alive)
+    nextGenerationCell.run(testGrid) should be(None)
   }
 
   it should "should die if it has more than three neighbours" in {
@@ -31,7 +31,7 @@ class GenerationServiceSpec extends FlatSpec {
 
     val nextGenerationCell = GenerationService.overpopulation(testCell)
 
-    nextGenerationCell.run(testGrid).get.s should be(Dead)
+    nextGenerationCell.run(testGrid).get should be(CellDied(testCell.coord))
   }
 
   "A dead cell" should "become a live cell if it has exactly three neighbours" in {
@@ -40,7 +40,7 @@ class GenerationServiceSpec extends FlatSpec {
 
     val nextGenerationCell = GenerationService.reproduction(testCell)
 
-    nextGenerationCell.run(testGrid).get.s should be(Alive)
+    nextGenerationCell.run(testGrid).get should be(CellResurrected(testCell.coord))
   }
 
 }

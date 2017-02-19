@@ -1,39 +1,27 @@
 import gol.model._
-import gol.services.interpreter.GenerationService
+import gol.services.interpreter.GridService
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
 
 class GameOfLifeSpec extends FlatSpec {
 
-  private val originalGrid = Grid.withSize(0, 4)
+  implicit val log: EventLog = new EventLog
+
+  {
+    GridService.createGrid(4, 4, Seq(Coordinates(0, 1), Coordinates(0, 2), Coordinates(1, 1), Coordinates(2, 1),
+      Coordinates(3, 3), Coordinates(3, 2), Coordinates(3, 1))).foreach {
+      event => log.add(event)
+    }
+  }
 
   "A grid" should "creates the next generation based on the current one" in {
-    implicit var testGrid = Grid(List(
-      Cell(Coordinates(0, 0), Dead),
-      Cell(Coordinates(0, 1), Dead),
-      Cell(Coordinates(0, 2), Dead),
-      Cell(Coordinates(0, 3), Dead),
-
-      Cell(Coordinates(1, 0), Dead),
-      Cell(Coordinates(1, 1), Dead),
-      Cell(Coordinates(1, 2), Alive),
-      Cell(Coordinates(1, 3), Dead),
-
-      Cell(Coordinates(2, 0), Dead),
-      Cell(Coordinates(2, 1), Dead),
-      Cell(Coordinates(2, 2), Alive),
-      Cell(Coordinates(2, 3), Alive),
-
-      Cell(Coordinates(3, 0), Dead),
-      Cell(Coordinates(3, 1), Dead),
-      Cell(Coordinates(3, 2), Alive),
-      Cell(Coordinates(3, 3), Dead)
-
-    ))
-
-    val nextGenerationGrid = GameOfLife.next(testGrid)
-
-    println(nextGenerationGrid)
+    GridService.loadGrid(log.allEvents).foreach(
+      initialGeneration => {
+        println(initialGeneration)
+        println(".....")
+        println(GameOfLife.next(initialGeneration))
+      }
+    )
   }
 
 }

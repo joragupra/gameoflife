@@ -3,10 +3,10 @@ package gol.model
 case class Grid (cells: List[Cell])
 
 object Grid {
-  def withSize(min: Int, max: Int) = {
+  def withSize(x: Int, y: Int) = {
     val availableCoordinates = for {
-      i <- min to max
-      j <- min to max
+      i <- 0 to x
+      j <- 0 to y
     } yield Cell(Coordinates(i, j), Dead)
     Grid(availableCoordinates.toList)
   }

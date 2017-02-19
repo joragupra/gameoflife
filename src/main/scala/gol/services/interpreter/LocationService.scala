@@ -5,7 +5,7 @@ import gol.services.LocationService
 
 import scalaz.Reader
 
-class LocationServiceInterpreter extends LocationService[Coordinates, State] {
+abstract class LocationServiceInterpreter extends LocationService[Grid, Cell, Coordinates, State] {
   import Math.abs
 
   override def areNeighbours(c1: Coordinates, c2: Coordinates): Boolean = (c1, c2) match {
@@ -21,6 +21,12 @@ class LocationServiceInterpreter extends LocationService[Coordinates, State] {
     }
 
   override def countNeighbours(coord: Coordinates, state: State): Reader[Grid, Int] = neighbours(coord).map(cells => cells.count(_.s == state))
+
+  def find(coord: Coordinates): Reader[Grid, Option[Cell]] =
+    Reader {
+      (g: Grid) => g.cells.find(_.coord == coord)
+    }
+
 }
 
 object LocationService extends LocationServiceInterpreter

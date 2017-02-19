@@ -97,19 +97,6 @@ class GridServiceSpec extends FlatSpec {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   "A cell" should "be dead after it was resurrected" in {
     val events = List(
       CoordinateEnabled(Coordinates(0, 0)),
@@ -162,23 +149,6 @@ class GridServiceSpec extends FlatSpec {
     error.isLeft should be(true)
     error.swap.foreach{
       msg => msg.head should be(s"Cell at coordinate " + Coordinates(3, 3) + " cannot die: not found")
-    }
-  }
-
-  "An error" should "be raised when an unknown event is provided" in {
-    val events = List(
-      CoordinateEnabled(Coordinates(0, 0)),
-      CoordinateEnabled(Coordinates(0, 1)),
-      CoordinateEnabled(Coordinates(1, 0)),
-      CoordinateEnabled(Coordinates(1, 1)),
-      TurnStarted(1)
-    )
-
-    val error = GridService.loadGrid(events)
-
-    error.isLeft should be(true)
-    error.swap.foreach{
-      msg => msg.head should be("Event not recognized: " + TurnStarted(1))
     }
   }
 

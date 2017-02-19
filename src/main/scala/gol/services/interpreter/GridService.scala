@@ -29,6 +29,7 @@ class GridServiceInterpreter extends GridService[Grid, Coordinates, TurnEvent] {
       case coord: CoordinateEnabled => enableCoordinate(coord.c, g)
       case resurr: CellResurrected => resurrectCell(resurr.c, g)
       case died: CellDied => killCell(died.c, g)
+      case _: TurnStarted => \/-(g)
       case e => -\/(NonEmptyList("Event not recognized: " + e))
     }
   }
